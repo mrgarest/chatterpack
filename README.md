@@ -10,7 +10,7 @@
 
 Adding custom commands to send pre-written messages.
 
-![Commands](https://i.ibb.co/214rV5rT/3.gif)
+![Commands](https://i.ibb.co/6cTWhrfv/command.gif)
 
 ### Moderation
 
