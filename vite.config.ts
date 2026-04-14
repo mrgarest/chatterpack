@@ -1,0 +1,107 @@
+import { defineConfig, type Plugin } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
+import getManifest from "./manifest.config";
+import path from "path";
+import fs from "fs";
+import { alias, define, banner } from "./vite.utils";
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: "./LICENSE",
+          dest: "",
+        },
+        {
+          src: "src/assets/*",
+          dest: "",
+        },
+      ],
+    }),
+    {
+      name: "vite-plugin-manifest",
+      apply: "build",
+      generateBundle(_, _bundle) {
+        const manifestJson = JSON.stringify(getManifest(), null, 2);
+
+        this.emitFile({
+          type: "asset",
+          fileName: "manifest.json",
+          source: manifestJson,
+        });
+      },
+    },
+    CustomLocalesPlugin(),
+  ],
+  resolve: {
+    alias,
+  },
+  define,
+  build: {
+    rollupOptions: {
+      output: {
+        banner: banner,
+      },
+    },
+    sourcemap: process.env.DEBUG == "true",
+  },
+});
+
+function CustomLocalesPlugin(): Plugin {
+  let viteOutDir: string;
+
+  return {
+    name: "vite:custom-locales",
+    apply: "build",
+
+    configResolved(config) {
+      viteOutDir = config.build.outDir;
+    },
+
+    async closeBundle() {
+      const inputDir = path.resolve(__dirname, "./locales");
+      const outputDir = path.resolve(process.cwd(), viteOutDir, "_locales");
+
+      if (!fs.existsSync(inputDir)) return;
+
+      const localeDirs = fs
+        .readdirSync(inputDir)
+        .filter((f) => fs.statSync(path.join(inputDir, f)).isDirectory());
+
+      for (const langCode of localeDirs) {
+        const translationFile = path.join(
+          inputDir,
+          langCode,
+          "translation.json",
+        );
+        if (!fs.existsSync(translationFile)) continue;
+
+        const translation: Record<string, string> = JSON.parse(
+          fs.readFileSync(translationFile, "utf-8"),
+        );
+
+        const langOutputDir = path.join(outputDir, langCode);
+        fs.mkdirSync(langOutputDir, { recursive: true });
+
+        fs.writeFileSync(
+          path.join(langOutputDir, "messages.json"),
+          JSON.stringify(
+            {
+              appName: { message: translation.appName },
+              appDesc: { message: translation.appDesc },
+            },
+            null,
+            2,
+          ),
+          "utf-8",
+        );
+      }
+    },
+  };
+}

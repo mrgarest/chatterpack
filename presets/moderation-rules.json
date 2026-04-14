@@ -1,0 +1,130 @@
+[
+    {
+        "trigger": "раб(и|ы|ство|ів|ом|ських|)",
+        "regex": true
+    },
+    {
+        "trigger": "п(і|и)д(ор|ори|оры|ар|арас|араси|арасы|арами|арамы|арів|арыв)",
+        "regex": true
+    },
+    {
+        "trigger": "п(и|і)др(и|і)ло",
+        "regex": true
+    },
+    {
+        "trigger": "гомо",
+        "regex": false
+    },
+    {
+        "trigger": "циган(и|ча|ок|ка|ське|iв|)",
+        "regex": true
+    },
+    {
+        "trigger": "с(і|и)мп(и|)",
+        "regex": true
+    },
+    {
+        "trigger": "хач(і|и|)",
+        "regex": true
+    },
+    {
+        "trigger": "кацап(а|ів|и|)",
+        "regex": true
+    },
+    {
+        "trigger": "рашк(у|а|і|и)",
+        "regex": true
+    },
+    {
+        "trigger": "рус(ня|ні|ньою|ак|аки)",
+        "regex": true
+    },
+    {
+        "trigger": "узьк(і|ий|их)",
+        "regex": true
+    },
+    {
+        "trigger": "москал(і|ь|иха)",
+        "regex": true
+    },
+    {
+        "trigger": "гойда",
+        "regex": false
+    },
+    {
+        "trigger": "хох(ол|ли|олка|лушка|лів)",
+        "regex": true
+    },
+    {
+        "trigger": "укроп(и|)",
+        "regex": true
+    },
+    {
+        "trigger": "негр(ів|ро|)",
+        "regex": true
+    },
+    {
+        "trigger": "даун(и|ы|а|ша|)",
+        "regex": true
+    },
+    {
+        "trigger": "манда",
+        "regex": false
+    },
+    {
+        "trigger": "аутист(ы|и|)",
+        "regex": true
+    },
+    {
+        "trigger": "п(е|є)д(и|і)к(и|ы|)",
+        "regex": true
+    },
+    {
+        "trigger": "н(і|и)г(а|ери|еры|ерша|ер)",
+        "regex": true
+    },
+    {
+        "trigger": "дод(і|и)к(ків|)",
+        "regex": true
+    },
+    {
+        "trigger": "мадяр(ів|и)",
+        "regex": true
+    },
+    {
+        "trigger": "ге(тт|т)о",
+        "regex": true
+    },
+    {
+        "trigger": "куколд(и|ы|а|)",
+        "regex": true
+    },
+    {
+        "trigger": "карлик(ів|и|ами|)",
+        "regex": true
+    },
+    {
+        "trigger": "нац(и|ы)к(и|ів|)",
+        "regex": true
+    },
+    {
+        "trigger": "zv",
+        "regex": false
+    },
+    {
+        "trigger": "zov",
+        "regex": false
+    },
+    {
+        "trigger": "naga",
+        "regex": false
+    },
+    {
+        "trigger": "ni(gg|g)(er|ur|a|s)",
+        "regex": true
+    },
+    {
+        "trigger": "slave",
+        "regex": false
+    }
+]
