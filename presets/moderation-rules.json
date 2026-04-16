@@ -56,7 +56,7 @@
         "regex": true
     },
     {
-        "trigger": "укроп(и|)",
+        "trigger": "укроп(и|ы|)",
         "regex": true
     },
     {
