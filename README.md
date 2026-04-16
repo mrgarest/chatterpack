@@ -26,4 +26,5 @@ Highlight specific messages or users in chat so they never get lost in the strea
 
 ## Useful links
 
+- [Chrome Web Store](https://chromewebstore.google.com/detail/jledjoimnndegeadedffbhmojmfncbjb)
 - [Privacy Policy](https://github.com/mrgarest/chatterpack/blob/main/PRIVACY-POLICY.md)
