@@ -108,6 +108,10 @@
         "regex": true
     },
     {
+        "trigger": "жид(и|)",
+        "regex": true
+    },
+    {
         "trigger": "zv",
         "regex": false
     },
