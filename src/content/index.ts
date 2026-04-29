@@ -8,7 +8,7 @@ import {
 } from "@/enums/message";
 import { moderationRules } from "./moderation-rules";
 import { highlights } from "./highlights";
-import type { ChatController } from "@/interfaces/chat-controller";
+import type { ChatController } from "@/types/chat-controller";
 import { injectChatterpackSettingsButton } from "./chatterpack-settings-button";
 
 // Script injection

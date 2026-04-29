@@ -1,4 +1,4 @@
-import type { Comman, Highlight, ModerationRule } from "@/interfaces/database";
+import type { Comman, Highlight, ModerationRule } from "@/types/database";
 import i18n from "@/lib/i18n";
 import Dexie, { type Table } from "dexie";
 

@@ -1,6 +1,6 @@
 import { HighlightType } from "@/enums/database";
 import { RuntimeMessageType } from "@/enums/message";
-import type { Highlight } from "@/interfaces/database";
+import type { Highlight } from "@/types/database";
 import { matchTrigger } from "@/utils/chat";
 import { initWithRetry } from "@/utils/database";
 

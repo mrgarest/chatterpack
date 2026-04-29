@@ -7,7 +7,7 @@ import { hexToRgba } from "@/utils/color";
 import { ModerationAction } from "@/enums/database";
 import { postChatMessage } from "@/utils/chat";
 import { highlights } from "./highlights";
-import type { ChatController } from "@/interfaces/chat-controller";
+import type { ChatController } from "@/types/chat-controller";
 import { settingsCache } from "@/utils/settings";
 
 // The default highlight color if the rule does not specify one.

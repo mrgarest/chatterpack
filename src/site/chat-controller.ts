@@ -1,4 +1,4 @@
-import type { Auth, Channel, User } from "@/interfaces/chat-controller";
+import type { Auth, Channel, User } from "@/types/chat-controller";
 import { MessageSource, MessageType } from "@/enums/message";
 
 /**

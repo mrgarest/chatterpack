@@ -3,7 +3,7 @@ import {
   MessageType,
   RuntimeMessageType,
 } from "@/enums/message";
-import type { Comman } from "@/interfaces/database";
+import type { Comman } from "@/types/database";
 import { postChatMessage } from "@/utils/chat";
 import { initWithRetry } from "@/utils/database";
 

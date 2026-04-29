@@ -26,7 +26,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@components/ui/alert-dialog";
-import type { ModerationRule } from '@/interfaces/database';
+import type { ModerationRule } from '@/types/database';
 import { RuntimeMessageType } from '@/enums/message';
 
 /**
