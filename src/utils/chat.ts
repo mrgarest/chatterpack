@@ -38,8 +38,7 @@ export const matchTrigger = (
   // Regular Expression Mode
   if (isRegex) {
     try {
-      // Exact search within Unicode boundaries
-      return new RegExp(`(?<=^|\\s)${trigger}(?=$|\\s)`, "iu").test(text);
+      return new RegExp(`(?<!\\p{L})${trigger}(?!\\p{L})`, "iu").test(text);
     } catch (e) {
       // If the dynamic regex fails, use the compiled version
       return preCompiledRegex ? preCompiledRegex.test(text) : false;
@@ -47,7 +46,6 @@ export const matchTrigger = (
   }
 
   // Plain Text Mode
-  const wordsInText = lowerText.split(/\s+/);
   const triggerWords = trigger
     .toLowerCase()
     .split(/\s+/)
@@ -55,7 +53,9 @@ export const matchTrigger = (
 
   if (triggerWords.length > 0) {
     // Search for a trigger
-    return triggerWords.every((word) => wordsInText.includes(word));
+    return triggerWords.every((word) =>
+      new RegExp(`(?<!\\p{L})${word}(?!\\p{L})`, "iu").test(lowerText),
+    );
   }
 
   // Fallback only if there is none in the trigger.
