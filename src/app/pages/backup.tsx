@@ -8,6 +8,8 @@ import i18n from '@/lib/i18n';
 import { ruleSchema } from './moderation-rules';
 import { highlightSchema } from './highlight';
 import { commandSchema } from './commands';
+import { DEFAULT_SETTINGS, settings } from '@/utils/settings';
+import type { Settings } from '@/types/settings';
 
 export default function BackupPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,7 +25,10 @@ export default function BackupPage() {
     const handleExport = async () => {
         const loadingToast = toast.loading(i18n.t("preparingFiles"));
         try {
+            const allSettings = await settings.getAll();
+
             const backupData = {
+                ...allSettings,
                 commands: stripIds(await db.commands.toArray()),
                 moderationRule: stripIds(await db.moderationRule.toArray()),
                 highlights: stripIds(await db.highlights.toArray()),
@@ -109,6 +114,16 @@ export default function BackupPage() {
                         await db.highlights.bulkPut(data);
                     }
                 });
+
+                // Get only the settings keys
+                const settingsKeys = Object.keys(DEFAULT_SETTINGS) as (keyof Settings)[];
+                const importedSettings = Object.fromEntries(
+                    settingsKeys
+                        .filter(key => key in json)
+                        .map(key => [key, json[key]])
+                ) as Partial<Settings>;
+
+                await settings.set(importedSettings);
 
                 toast.success(i18n.t("importSuccess"), { id: loadingToast });
                 // Clear the input so that the same file can be imported again
