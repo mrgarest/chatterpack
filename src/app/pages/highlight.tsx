@@ -12,9 +12,10 @@ import { db } from '@/database';
 import i18n from '@/lib/i18n';
 import { HighlightType } from '@/enums/database';
 import { cn } from '@/lib/utils';
-import { DEFAULT_SETTINGS, type Settings } from '@/utils/settings';
+import { DEFAULT_SETTINGS, settings } from '@/utils/settings';
 import { HighlightRow } from '@components/ui/highlight-row';
 import { RuntimeMessageType } from '@/enums/message';
+import type { CustomHighlight } from '@/types/settings';
 
 /**
  * Validation scheme
@@ -46,7 +47,7 @@ type HighlightFormValues = {
 };
 
 export default function HighlightPage() {
-    const [highlightMyUsername, setHighlightMyUsername] = useState(DEFAULT_SETTINGS.highlightMyUsername);
+    const [highlightMyUsername, setHighlightMyUsername] = useState<CustomHighlight>(DEFAULT_SETTINGS.highlightMyUsername);
 
     const { control, handleSubmit, reset, formState, setValue } = useForm<HighlightFormValues>({
         resolver: zodResolver(z.object({ rules: z.array(highlightSchema) })),
@@ -65,9 +66,7 @@ export default function HighlightPage() {
     });
 
     useEffect(() => {
-        chrome?.storage?.local.get(DEFAULT_SETTINGS, (res: Settings) => {
-            setHighlightMyUsername(res.highlightMyUsername);
-        });
+        setHighlightMyUsername(settings.get("highlightMyUsername"));
     }, []);
 
     /**

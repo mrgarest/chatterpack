@@ -8,7 +8,7 @@ import { ModerationAction } from "@/enums/database";
 import { postChatMessage } from "@/utils/chat";
 import { highlights } from "./highlights";
 import type { ChatController } from "@/types/chat-controller";
-import { settingsCache } from "@/utils/settings";
+import { settings } from "@/utils/settings";
 
 // The default highlight color if the rule does not specify one.
 const DEFAULT_HIGHLIGHT_COLOR: string = "#a4a4a4";
@@ -107,7 +107,7 @@ const handleMessage = (irc: string) => {
   }
 
   // Highlighting the my user username
-  const highlightMyUsername = settingsCache.get("highlightMyUsername");
+  const highlightMyUsername = settings.get("highlightMyUsername");
   if (highlightMyUsername.enabled) {
     const currentUsername = chatController?.user?.username;
     if (
