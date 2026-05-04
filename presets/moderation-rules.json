@@ -20,6 +20,10 @@
         "regex": true
     },
     {
+        "trigger": "вицигани(ли|в)",
+        "regex": true
+    },
+    {
         "trigger": "с(і|и)мп(и|)",
         "regex": true
     },
