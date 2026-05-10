@@ -134,5 +134,9 @@
     {
         "trigger": "slave",
         "regex": false
+    },
+    {
+        "trigger": "kys",
+        "regex": false
     }
 ]
