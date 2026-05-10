@@ -71,7 +71,7 @@ class MessageSyncQueue {
     const key = username.toLowerCase();
     const item: PendingMessage = {
       username: key,
-      text: text.trim().toLowerCase(),
+      text: text.trim().toLowerCase().replace(/\s+/g, " "),
       timestamp: Date.now(),
       action,
     };
@@ -97,7 +97,7 @@ class MessageSyncQueue {
 
     if (!messages) return null;
 
-    const lowerText = domText.toLowerCase();
+    const lowerText = domText.toLowerCase().replace(/\s+/g, " ");
 
     // Searching for the most similar post in this user's list
     for (let i = messages.length - 1; i >= 0; i--) {

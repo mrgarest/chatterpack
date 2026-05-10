@@ -39,7 +39,7 @@ export const matchTrigger = (
   if (isRegex) {
     try {
       return new RegExp(`(?<!\\p{L})${trigger}(?!\\p{L})`, "iu").test(text);
-    } catch (e) {
+    } catch {
       // If the dynamic regex fails, use the compiled version
       return preCompiledRegex ? preCompiledRegex.test(text) : false;
     }
@@ -51,17 +51,26 @@ export const matchTrigger = (
     .split(/\s+/)
     .filter((w) => w.length > 0);
 
-  if (triggerWords.length > 0) {
+  if (triggerWords.length === 0) {
     // Search for a trigger
-    return triggerWords.every((word) =>
-      new RegExp(`(?<!\\p{L})${word}(?!\\p{L})`, "iu").test(lowerText),
-    );
+    return trigger.trim().length > 0
+      ? lowerText.includes(trigger.toLowerCase())
+      : false;
   }
 
-  // Fallback only if there is none in the trigger.
-  if (trigger.trim().length > 0) {
-    return lowerText.includes(trigger.toLowerCase());
-  }
+  return triggerWords.every((word) => {
+    // Check if the word contains CJK or Arabic characters
+    const hasCJK =
+      /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufdff\uff66-\uffef\u0600-\u06ff]/u.test(
+        word,
+      );
 
-  return false;
+    if (hasCJK) {
+      // For CJK/Arabic, just use `include`, since there are no spaces between words
+      return lowerText.includes(word);
+    }
+
+    // For Latin characters — word boundary using lookbehind/lookahead
+    return new RegExp(`(?<!\\p{L})${word}(?!\\p{L})`, "iu").test(lowerText);
+  });
 };

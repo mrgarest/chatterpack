@@ -36,7 +36,7 @@ window.addEventListener("message", (event: MessageEvent) => {
   // Handle specific types of events
   switch (type) {
     case MessageType.CHAT_MESSAGE:
-      commands.handleMessage(payload.text, payload.execute);
+      commands.handleChatMessage(payload.text, payload.execute);
       break;
     case MessageType.WS_CHAT:
       chat.handleIRC(payload.irc);

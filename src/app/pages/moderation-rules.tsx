@@ -117,6 +117,7 @@ export default function ModerationRulesPage() {
                 await db.moderationRule.bulkPut(values.rules.map(r => ({
                     ...r,
                     action: r.action as ModerationAction,
+                    extraValue: r.action === ModerationAction.TIMEOUT ? r.extraValue : undefined,
                 })));
             });
 
@@ -165,7 +166,7 @@ export default function ModerationRulesPage() {
                         enabled: true,
                         highlight: true,
                         sound: false,
-                        extraValue: "",
+                        extraValue: undefined,
                     });
                     currentTriggers.add(lowTrigger);
                 }

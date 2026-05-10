@@ -9,6 +9,7 @@ import { postChatMessage } from "@/utils/chat";
 import { highlights } from "./highlights";
 import type { ChatController } from "@/types/chat-controller";
 import { settings } from "@/utils/settings";
+import { commands } from "./commands";
 
 // The default highlight color if the rule does not specify one.
 const DEFAULT_HIGHLIGHT_COLOR: string = "#a4a4a4";
@@ -69,6 +70,10 @@ const handleMessage = (irc: string) => {
 
   if (!username || !message) return;
 
+  if (__DEBUG__) {
+    console.log(`[IRC message] ${username}: ${message}`);
+  }
+
   // Moderation Rules
   const rule = moderationRules.check(message);
   if (rule) {
@@ -104,6 +109,16 @@ const handleMessage = (irc: string) => {
         break;
     }
     return;
+  }
+
+  // Command handling
+  if (chatController?.channel?.name && chatController?.user?.username) {
+    commands.handle(
+      username,
+      message,
+      chatController.channel.name,
+      chatController.user.username,
+    );
   }
 
   // Highlighting the my user username

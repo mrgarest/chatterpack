@@ -6,7 +6,7 @@ export const Layout = () => {
     return (
         <div className="container pt-6 grid grid-cols-[auto_1fr] gap-8 min-h-screen">
             <Navbar />
-            <div className="grid grid-rows-[1fr_auto]">
+            <div className="grid grid-rows-[1fr_auto] min-w-0 max-w-full overflow-hidden">
                 <Outlet />
                 <Footer />
             </div>

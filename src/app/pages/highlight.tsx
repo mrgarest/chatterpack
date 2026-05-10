@@ -25,7 +25,7 @@ export const highlightSchema = z.object({
     type: z.enum(Object.values(HighlightType) as [string, ...string[]]),
     enabled: z.boolean(),
     trigger: z.string().min(1, i18n.t("errors.required")),
-    color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, i18n.t("errors.invalidColor")),
+    color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, i18n.t("errors.invalidFormat")),
     regex: z.boolean(),
     sound: z.boolean(),
 }).superRefine((data, ctx) => {

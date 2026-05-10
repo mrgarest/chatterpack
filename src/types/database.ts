@@ -1,10 +1,14 @@
-import type { HighlightType, ModerationAction } from "@/enums/database";
+import type { CommandAccess, CommandReplyType, CommandScope, HighlightType, ModerationAction } from "@/enums/database";
 
-export interface Comman {
+export interface Command {
   id?: number;
   enabled: boolean;
   trigger: string;
   command: string;
+  scope: CommandScope;
+  scopeChannel?: string;
+  access: CommandAccess;
+  replyType: CommandReplyType;
 }
 
 export interface ModerationRule {

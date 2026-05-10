@@ -32,7 +32,7 @@ export default function BackupPage() {
                 commands: stripIds(await db.commands.toArray()),
                 moderationRule: stripIds(await db.moderationRule.toArray()),
                 highlights: stripIds(await db.highlights.toArray()),
-                version: 1,
+                version: 2,
                 exportedAt: Date.now(),
             };
 

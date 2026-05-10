@@ -1,40 +1,38 @@
 import {
+  CommandAccess,
+  CommandReplyType,
+  CommandScope,
+} from "@/enums/database";
+import {
   MessageSource,
   MessageType,
   RuntimeMessageType,
 } from "@/enums/message";
-import type { Comman } from "@/types/database";
+import type { Command } from "@/types/database";
 import { postChatMessage } from "@/utils/chat";
 import { initWithRetry } from "@/utils/database";
 
 // Local command cache for instant access
-let cachedCommands: Record<string, string> = {};
+let cachedCommands: Command[] = [];
 
 /**
  * Compiles a set of highlights from the database into an internal format using predefined RegExp.
  * @param commands - Highlights from the database
  */
-const compile = (commands: Comman[]): Record<string, string> => {
-  const cache: Record<string, string> = {};
-  commands.forEach((cmd) => {
-    if (cmd.trigger && cmd.command) {
-      cache[cmd.trigger.trim()] = cmd.command;
-    }
-  });
-  return cache;
-};
+const compile = (commands: Command[]): Command[] =>
+  commands.filter((cmd) => cmd.trigger && cmd.command);
 
 /**
  * Initial data loading from the background script when the content script starts.
  * @param attempt
  */
 const init = (attempt = 0) =>
-  initWithRetry<Comman>(
+  initWithRetry<Command>(
     RuntimeMessageType.GET_ACTIVE_COMMANDS,
     (commands) => {
       cachedCommands = compile(commands);
     },
-    "Highlight",
+    "Commands",
     attempt,
   );
 
@@ -42,7 +40,7 @@ const init = (attempt = 0) =>
  * Refreshes the policy cache after saving data.
  * @param highlights - Highlights from the database
  */
-const sync = (commands: Comman[]): void => {
+const sync = (commands: Command[]): void => {
   cachedCommands = compile(commands);
 };
 
@@ -51,37 +49,67 @@ const sync = (commands: Comman[]): void => {
  * @param text - Message text
  * @param execute
  */
-const handleMessage = (text: string, execute: boolean) => {
-  let result = text;
-  let changed = false;
+const handleChatMessage = (text: string, execute: boolean) => {
+  const trimmed = text.trim();
 
-  // Iterating through the command dictionary
-  for (const [cmd, replacement] of Object.entries(cachedCommands)) {
-    const safeCmd = cmd.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(`${safeCmd}(\\s|$)`, "g");
+  for (const cmd of cachedCommands) {
+    const trigger = cmd.trigger.trim();
+    if (trimmed !== trigger && !trimmed.startsWith(trigger + " ")) continue;
 
-    if (regex.test(text)) {
-      // Replace the trigger with a command, preserving the space after the trigger if it exists
-      result = result.replace(regex, replacement + "$1");
-      changed = true;
-      break;
-    }
-  }
-
-  if (!changed) {
-    // Unblock the process if the command is not found
-    window.postMessage(
-      {
-        source: MessageSource.EXTENSION,
-        type: MessageType.COMMAND_NOT_FOUND,
-        payload: { execute: execute },
-      },
-      "*",
-    );
+    // Send the command
+    postChatMessage(cmd.command, execute);
     return;
   }
 
-  postChatMessage(result, execute);
+  // Command not found
+  window.postMessage(
+    {
+      source: MessageSource.EXTENSION,
+      type: MessageType.COMMAND_NOT_FOUND,
+      payload: { execute },
+    },
+    "*",
+  );
 };
 
-export const commands = { init, sync, handleMessage };
+/**
+ * Finds command triggers in the text and executes the corresponding command.
+ * @param username - The username of who triggered the command
+ * @param text - Message text
+ * @param channel - Current channel name
+ * @param myUsername - The extension owner's username
+ */
+const handle = (
+  username: string,
+  text: string,
+  channel: string,
+  myUsername: string,
+) => {
+  const trimmed = text.trim();
+
+  for (const cmd of cachedCommands) {
+    const trigger = cmd.trigger.trim();
+
+    if (trimmed !== trigger && !trimmed.startsWith(trigger + " ")) continue;
+
+    // Check scope
+    if (cmd.scope === CommandScope.CHANNEL) {
+      if (cmd.scopeChannel?.toLowerCase() !== channel.toLowerCase()) continue;
+    }
+
+    // Check access
+    if (cmd.access === CommandAccess.ME) {
+      if (username.toLowerCase() !== myUsername.toLowerCase()) return;
+    }
+
+    // Send the command
+    postChatMessage(
+      cmd.replyType === CommandReplyType.MENTION
+        ? `@${username} ${cmd.command}`
+        : cmd.command,
+    );
+    return;
+  }
+};
+
+export const commands = { init, sync, handleChatMessage, handle };
